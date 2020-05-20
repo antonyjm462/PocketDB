@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.conf.urls import include, url
 from rest_framework import routers
 from Database import views
 
@@ -12,5 +13,13 @@ router.register(r'groups', views.GroupViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    re_path(r'^api/data/(?P<pk>[0-9]+)$', # Url to get update or delete Data
+        views.Database_Get_Update_Delete_Api.as_view(),
+        name='Database_Get_Update_Delete_Api'
+    ),
+    path('api/data/', # urls list all and create new one
+        views.Database_Get_Post_Api.as_view(),
+        name='Database_Get_Post_Api'
+    )
+
 ]
